@@ -45,4 +45,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'terminal-notifier-guard', '~> 1.6'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'reek'
+  spec.add_development_dependency 'rack-test'
 end
