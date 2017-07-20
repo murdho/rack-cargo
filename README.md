@@ -1,12 +1,20 @@
 # Rack::Cargo
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rack/cargo`. To experiment with that code, run `bin/console` for an interactive prompt.
+Have you built nice RESTful APIs? I believe you have.
 
-TODO: Delete this and the text above, and describe your gem
+Then you are also familiar with the situation, where API consumer needs to perform multiple actions at once. Maybe in the client application, multiple resources get created on one page. Creating multiple resources means making multiple HTTP requests.
+
+What if you could **batch the requests** together and send in one HTTP requests, wouldn't that be more efficient? I believe it would be! That's where **Rack::Cargo** comes in.
+
+Figuratively speaking, load your HTTP-request ship with the request cargo and put it on the way and enjoy your RESTful API! ☀️
+
+> ***You:** I want to know more about RESTful. Where should I look?*
+>
+> ***Me:** Cool! I recommend this awesome talk: [In Relentless Pursuit of REST by Derek Prior](https://youtu.be/HctYHe-YjnE)*
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your Rack-based application's (Rails, Sinatra, etc.) Gemfile:
 
 ```ruby
 gem 'rack-cargo'
@@ -20,9 +28,11 @@ Or install it yourself as:
 
     $ gem install rack-cargo
 
-## Usage
+## Usage (TODO)
 
-TODO: Write usage instructions here
+- Configure
+- ...
+- Profit!
 
 ## Development
 
