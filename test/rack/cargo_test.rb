@@ -1,11 +1,11 @@
-require "test_helper"
+# frozen_string_literal: true
 
-class Rack::CargoTest < Minitest::Test
-  def test_that_it_has_a_version_number
-    refute_nil ::Rack::Cargo::VERSION
-  end
+require 'test_helper'
 
-  def test_it_does_something_useful
-    assert false
+module Rack
+  class CargoTest < Minitest::Test
+    def test_that_it_has_a_version_number
+      refute_nil ::Rack::Cargo::VERSION
+    end
   end
 end

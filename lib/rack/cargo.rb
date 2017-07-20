@@ -1,4 +1,6 @@
-require "rack/cargo/version"
+# frozen_string_literal: true
+
+require 'rack/cargo/version'
 
 module Rack
   module Cargo
