@@ -14,8 +14,8 @@ module Rack
       REQUEST_METHOD = "method"
       REQUEST_BODY = "body"
 
-      PLACEHOLDER_START = '{{'
-      PLACEHOLDER_END = '}}'
+      PLACEHOLDER_START = "{{\s*"
+      PLACEHOLDER_END = "\s*}}"
       PLACEHOLDER_PATTERN = /#{PLACEHOLDER_START}(.*?)#{PLACEHOLDER_END}/
 
       def process_batch_request(env)

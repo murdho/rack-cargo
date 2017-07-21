@@ -169,7 +169,7 @@ describe Rack::Cargo::Middleware do
         },
         {
           "name" => "order_item",
-          "path" => "/orders/{{order.uuid}}/items",
+          "path" => "/orders/{{ order.uuid }}/items",
           "method" => "POST",
           "body" => {
             "title" => "A Book"
@@ -181,7 +181,7 @@ describe Rack::Cargo::Middleware do
           "method" => "POST",
           "body" => {
             "orders" => [
-              "{{order.uuid}}"
+              "{{ order.uuid }}"
             ]
           }
         }
