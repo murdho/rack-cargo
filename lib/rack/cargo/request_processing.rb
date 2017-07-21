@@ -15,7 +15,8 @@ module Rack
       REQUEST_BODY = "body"
 
       def process_batch_request(env)
-        requests = get_requests(env[ENV_INPUT])
+        json_payload = get_json_payload(env[ENV_INPUT])
+        requests = get_requests(json_payload)
 
         if requests
           responses = []
@@ -49,10 +50,8 @@ module Rack
         JSON.parse(payload) rescue nil
       end
 
-      def get_requests(io)
-        json_payload = get_json_payload(io)
-        return unless json_payload && json_payload.key?(REQUESTS_KEY)
-        json_payload[REQUESTS_KEY]
+      def get_requests(json_payload)
+        json_payload && json_payload[REQUESTS_KEY]
       end
 
       def build_request_env(request, env)

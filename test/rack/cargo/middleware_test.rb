@@ -133,6 +133,12 @@ describe Rack::Cargo::Middleware do
     subject.get_json_payload(io).must_equal expected_result
   end
 
+  specify "getting requests from JSON payload" do
+    subject.get_requests("requests" => [{}]).must_equal [{}]
+    subject.get_requests("random" => "").must_be_nil
+    subject.get_requests(nil).must_be_nil
+  end
+
   specify "preparing environment for a request" do
     env = { "spy" => "hello" }
     request = {
