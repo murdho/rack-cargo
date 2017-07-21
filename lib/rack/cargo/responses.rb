@@ -8,6 +8,8 @@ module Rack
       RESPONSE_HEADERS = "headers"
       RESPONSE_BODY = "body"
 
+      ERROR_MESSAGE = "Invalid batch request"
+
       def single_response(**args)
         {
           RESPONSE_NAME => args.fetch(:name),
@@ -22,7 +24,7 @@ module Rack
       end
 
       def error_response
-        [422, response_headers, [{ errors: "missing key: requests" }.to_json]]
+        [422, response_headers, [{ errors: ERROR_MESSAGE }.to_json]]
       end
 
       def response_headers
