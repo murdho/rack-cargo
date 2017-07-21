@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require "json"
-require "rack/cargo/version"
-require "rack/cargo/middleware"
 
 module Rack
   module Cargo
-    # Your code goes here...
+    autoload :Version, "rack/cargo/version"
+    autoload :Responses, "rack/cargo/responses"
+    autoload :Middleware, "rack/cargo/middleware"
+    autoload :RequestProcessing, "rack/cargo/request_processing"
   end
 end
