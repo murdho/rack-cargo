@@ -13,6 +13,8 @@ describe Rack::Cargo::Middleware do
     end
   end
 
+  let(:batch_path) { "/batch" }
+
   subject { Rack::Cargo::Middleware.new(app) }
 
   describe "default app request" do
@@ -26,12 +28,12 @@ describe Rack::Cargo::Middleware do
 
   describe "batch request" do
     specify "chain execution gets sidetracked" do
-      post "/batch"
+      post batch_path
       last_response.body.wont_include "Hello from"
     end
 
     specify "requests must be in payload" do
-      post "/batch"
+      post batch_path
 
       last_response.status.must_equal 422
       last_response.body.must_include "missing key: requests"
@@ -47,8 +49,7 @@ describe Rack::Cargo::Middleware do
         }
       ]
 
-      post "/batch", { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
-
+      post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
       last_response.must_be :ok?
     end
 
@@ -71,8 +72,7 @@ describe Rack::Cargo::Middleware do
         }
       ]
 
-      post "/batch", { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
-
+      post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
       last_response.content_type.must_equal "application/json"
       last_response.body.must_equal response.to_json
     end
@@ -108,27 +108,22 @@ describe Rack::Cargo::Middleware do
         }
       ]
 
-      post "/batch", { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
-
+      post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
       last_response.body.must_equal response.to_json
     end
 
     specify "error response content_type is set properly" do
-      post "/batch"
-
+      post batch_path
       last_response.content_type.must_equal "application/json"
     end
   end
 
   specify "detecting batch path" do
-    batch_path = "/batch"
-
     subject.batch_request?(batch_path).must_equal true
   end
 
   specify "getting JSON payload from IO" do
     io = StringIO.new('{"billie": "jean"}')
-
     expected_result = { "billie" => "jean" }
     subject.get_json_payload(io).must_equal expected_result
   end
@@ -157,7 +152,6 @@ describe Rack::Cargo::Middleware do
     # for comparing IO objects we read them
     actual_result = subject.build_request_env(request, env)
     actual_result["rack.input"] = actual_result["rack.input"].read
-
     actual_result.must_equal expected_result
   end
 
@@ -182,13 +176,11 @@ describe Rack::Cargo::Middleware do
   specify "building a response for a batch" do
     responses = [{ "wanna" => "have fun?" }]
     expected_result = [200, { "Content-Type" => "application/json" }, ['[{"wanna":"have fun?"}]']]
-
     subject.batch_response(responses).must_equal expected_result
   end
 
   specify "error response" do
     status, headers, body = subject.error_response
-
     status.must_equal 422
     headers.must_equal "Content-Type" => "application/json"
     body.must_equal ['{"errors":"missing key: requests"}']
