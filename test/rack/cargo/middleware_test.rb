@@ -13,7 +13,7 @@ describe Rack::Cargo::Middleware do
     end
   end
 
-  let(:batch_path) { "/batch" }
+  let(:batch_path) { Rack::Cargo.config.batch_path }
 
   subject { Rack::Cargo::Middleware.new(app) }
 
@@ -233,70 +233,6 @@ describe Rack::Cargo::Middleware do
     specify "detecting batch path" do
       subject.batch_request?(batch_path).must_equal true
     end
-
-    # specify "getting JSON payload from IO" do
-    #   io = StringIO.new('{"billie": "jean"}')
-    #   expected_result = { "billie" => "jean" }
-    #   subject.get_json_payload(io).must_equal expected_result
-    # end
-
-    # specify "getting requests from JSON payload" do
-    #   subject.get_requests("requests" => [{}]).must_equal [{}]
-    #   subject.get_requests("random" => "").must_be_nil
-    #   subject.get_requests(nil).must_be_nil
-    # end
-
-    # specify "preparing environment for a request" do
-    #   env = { "spy" => "hello" }
-    #   request = {
-    #     "method" => "PATCH",
-    #     "path" => "/red",
-    #     "body" => { 'wine': 7 }
-    #   }
-    #
-    #   expected_result = {
-    #     "spy" => "hello",
-    #     "PATH_INFO" => "/red",
-    #     "REQUEST_METHOD" => "PATCH",
-    #     "rack.input" => '{"wine":7}'
-    #   }
-    #
-    #   # for comparing IO objects we read them
-    #   actual_result = subject.build_request_env(request, env)
-    #   actual_result["rack.input"] = actual_result["rack.input"].read
-    #   actual_result.must_equal expected_result
-    # end
-
-    # specify "building a response for a single request" do
-    #   args = {
-    #     name: "abc",
-    #     status: 200,
-    #     headers: {},
-    #     body: ["{}"]
-    #   }
-    #
-    #   expected_result = {
-    #     "name" => "abc",
-    #     "status" => 200,
-    #     "headers" => {},
-    #     "body" => {}
-    #   }
-    #
-    #   subject.single_response(**args).must_equal expected_result
-    # end
-
-    # specify "building a response for a batch" do
-    #   responses = [{ "wanna" => "have fun?" }]
-    #   expected_result = [200, { "Content-Type" => "application/json" }, ['[{"wanna":"have fun?"}]']]
-    #   subject.batch_response(responses).must_equal expected_result
-    # end
-
-    # specify "error response" do
-    #   status, headers, body = subject.error_response
-    #   status.must_equal 422
-    #   headers.must_equal "Content-Type" => "application/json"
-    #   body.must_equal ['{"errors":"Invalid batch request"}']
-    # end
   end
 end
 

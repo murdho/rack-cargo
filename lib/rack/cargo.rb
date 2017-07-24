@@ -7,7 +7,6 @@ require "rack/cargo/version"
 
 module Rack
   module Cargo
-    BATCH_PATH = "/batch"
     REQUESTS_KEY = "requests"
 
     ENV_PATH = "PATH_INFO"

@@ -19,7 +19,7 @@ module Rack
       end
 
       def batch_request?(path)
-        path == BATCH_PATH
+        path == Rack::Cargo.config.batch_path
       end
     end
   end
