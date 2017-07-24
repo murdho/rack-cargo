@@ -3,6 +3,8 @@
 require "json"
 require "securerandom"
 
+require "rack/cargo/version"
+
 module Rack
   module Cargo
     BATCH_PATH = "/batch"
@@ -22,8 +24,8 @@ module Rack
     RESPONSE_HEADERS = "headers"
     RESPONSE_BODY = "body"
 
-    autoload :Version, "rack/cargo/version"
     autoload :Middleware, "rack/cargo/middleware"
+    autoload :Configuration, "rack/cargo/configuration"
 
     autoload :BatchProcessor, "rack/cargo/batch_processor"
 
@@ -35,5 +37,15 @@ module Rack
     autoload :ResponseBuilder, "rack/cargo/response_builder"
 
     autoload :BatchResponse, "rack/cargo/batch_response"
+
+    class << self
+      def config
+        @config ||= Configuration.new
+      end
+
+      def configure
+        yield(config)
+      end
+    end
   end
 end
