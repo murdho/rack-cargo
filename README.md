@@ -126,7 +126,7 @@ Example shows both usages with `order.uuid` from the `order` response:
 ```
 
 ### Modifying batch processing pipeline
-****
+
 Batch processing is composed of steps that perform some concrete action on the request and/or state of the processing.
 
 To insert processor in the pipeline, define the processor and inject it to the processors list:
