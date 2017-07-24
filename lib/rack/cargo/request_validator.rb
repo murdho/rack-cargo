@@ -9,7 +9,7 @@ module Rack
         REQUEST_BODY
       ].freeze
 
-      def self.validate(requests)
+      def self.valid?(requests)
         return unless requests
 
         requests.all? do |request|

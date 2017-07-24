@@ -121,6 +121,34 @@ Example shows both usages with `order.uuid` from the `order` response:
 ]
 ```
 
+### Modifying batch processing pipeline
+
+Batch processing is composed of steps that perform some concrete action on the request and/or state of the processing.
+
+To insert processor in the pipeline, define the processor and inject it to the processors list:
+
+```ruby
+module MyFeeder
+  def self.call(request, state)
+    # calculate something
+    state.store(:data, "Useful data to MyEater")
+  end
+end
+ 
+module MyEater
+  def self.call(request, state)
+    data = state.fetch(:data)
+    # do something with the data
+  end
+end
+ 
+Rack::Cargo.configure do |config|
+  config.processors.insert(2, MyFeeder) # insert into third position
+  config.processors.insert(3, MyEater) # insert into fourth position
+end
+```
+
+Now your processors will be included in the pipeline.
 
 ## Development
 

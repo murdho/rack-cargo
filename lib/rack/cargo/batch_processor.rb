@@ -9,7 +9,7 @@ module Rack
         def process(app, env)
           requests = RequestPayloadJSON.from_env(env)
 
-          if RequestValidator.validate(requests)
+          if RequestValidator.valid?(requests)
             results = process_requests(app, env, requests)
             success(results)
           else
@@ -58,7 +58,7 @@ module Rack
         end
 
         def processors
-          [ReferenceResolver, RequestEnvBuilder, RequestExecutor, ResponseBuilder]
+          Rack::Cargo.config.processors
         end
       end
     end

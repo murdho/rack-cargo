@@ -22,6 +22,8 @@ module Rack
           end
         end
 
+        private
+
         def replace_placeholders(element, placeholders, state)
           previous_responses = state.fetch(:previous_responses)
 
@@ -48,8 +50,6 @@ module Rack
         def find_placeholders(element)
           element.scan(PLACEHOLDER_PATTERN).flatten
         end
-
-        private
 
         def get_json_element(request, attribute_key)
           element_copy = request.fetch(attribute_key).dup
