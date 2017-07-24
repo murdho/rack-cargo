@@ -221,8 +221,6 @@ describe Rack::Cargo::Middleware do
 
       post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
       last_response.body.must_equal response.to_json
-
-      # @app = nil
     end
 
     specify "error response content_type is set properly" do
