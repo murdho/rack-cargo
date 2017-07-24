@@ -1,3 +1,8 @@
+AllCops:
+  Exclude:
+    - test/**/*
+    - rack-cargo.gemspec
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
   SupportedStyles:

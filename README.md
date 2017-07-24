@@ -30,9 +30,125 @@ Or install it yourself as:
 
 ## Usage (TODO)
 
-- Configure
-- ...
-- Profit!
+### Configuration
+
+Initialize the middleware:
+
+```ruby
+Rack::Cargo.configure do |config|
+    config.batch_path = '/batch'
+end
+```
+
+Instruct `rack` to use the middleware:
+
+```ruby
+use Rack::Cargo::Middleware
+```
+
+### Referencing requests
+
+Requests in batch have access to the responses of executed (named) requests. This is useful, when creating resources and using the reference to it in the same batch.
+
+References can be used in `path` and `body` elements.
+
+Example shows both usages with `order.uuid` from the `order` response:
+
+```javascript
+// This is batch request payload:
+{
+    "requests": [
+        {
+            "name": "order",
+            "path": "/orders",
+            "method": "POST",
+            "body": {
+                "address": "Home, 12345"
+            }
+        },
+        {
+            "name": "order_item",
+            "path": "/orders/{{ order.uuid }}/items", // <-- here
+            "method": "POST",
+            "body": {
+                "title": "A Book"
+            }
+        },
+        {
+            "name": "payment",
+            "path": "/payments",
+            "method": "POST",
+            "body": {
+                "orders": [
+                    "{{ order.uuid }}" // <-- and here
+                ]
+            }
+        }
+    ]
+}
+
+// This is a possible response:
+[
+    {
+        "name": "order", // <-- "order" part of "order.uuid"
+        "status": 201,
+        "headers": {},
+        "body": {
+            "uuid": "bf52fdb5-d1c3-4c66-ba7d-bdf4cd83f265", // <-- "uuid" part of "order.uuid"
+            "address": "Home, 12345"
+        }
+    },
+    {
+        "name": "order_item",
+        "status": 201,
+        "headers": {},
+        "body": {
+            "uuid": "38bc4576-3b7e-40be-a1d6-ca795fe462c8",
+            "title": "A Book"
+        }
+    },
+    {
+        "name": "payment",
+        "status": 201,
+        "headers": {},
+        "body": {
+            "uuid": "c4f9f261-7822-4217-80a2-06cf92934bf9",
+            "orders": [
+                "bf52fdb5-d1c3-4c66-ba7d-bdf4cd83f265"
+            ]
+        }
+    }
+]
+```
+
+### Modifying batch processing pipeline
+
+Batch processing is composed of steps that perform some concrete action on the request and/or state of the processing.
+
+To insert processor in the pipeline, define the processor and inject it to the processors list:
+
+```ruby
+module MyFeeder
+  def self.call(request, state)
+    # calculate something
+    state.store(:data, "Useful data to MyEater")
+  end
+end
+ 
+module MyEater
+  def self.call(request, state)
+    data = state.fetch(:data)
+    # do something with the data
+  end
+end
+ 
+Rack::Cargo.configure do |config|
+  config.processors.insert(2, MyFeeder) # insert into third position
+  config.processors.insert(3, MyEater) # insert into fourth position
+end
+```
+
+Now your processors will be included in the pipeline.
 
 ## Development
 

@@ -3,13 +3,7 @@
 module Rack
   module Cargo
     class Middleware
-      include Responses
-      include RequestProcessing
-
       attr_accessor :app
-
-      BATCH_PATH = "/batch"
-      ENV_PATH = "PATH_INFO"
 
       def initialize(app)
         self.app = app
@@ -17,14 +11,15 @@ module Rack
 
       def call(env)
         if batch_request?(env[ENV_PATH])
-          process_batch_request(env)
+          result = BatchProcessor.process(app, env)
+          BatchResponse.from_result(result)
         else
           @app.call(env)
         end
       end
 
       def batch_request?(path)
-        path == BATCH_PATH
+        path == Rack::Cargo.config.batch_path
       end
     end
   end
