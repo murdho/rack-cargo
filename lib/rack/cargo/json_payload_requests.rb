@@ -3,6 +3,8 @@ module Rack
     module JSONPayloadRequests
       def self.from_env(env)
         io = env[ENV_INPUT]
+        return unless io
+
         payload = io.read
         return if payload.empty?
 

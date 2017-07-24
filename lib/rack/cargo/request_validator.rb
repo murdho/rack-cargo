@@ -1,12 +1,17 @@
 module Rack
   module Cargo
     module RequestValidator
+      REQUIRED_KEYS = [
+          REQUEST_PATH,
+          REQUEST_METHOD,
+          REQUEST_BODY
+      ]
+
       def self.validate(requests)
         return unless requests
 
-        required_keys = %w[path method body]
         requests.all? do |request|
-          required_keys.all? { |key| request.key?(key) }
+          REQUIRED_KEYS.all? { |key| request.key?(key) }
         end
       end
     end

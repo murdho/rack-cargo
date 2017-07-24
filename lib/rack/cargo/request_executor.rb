@@ -2,8 +2,12 @@ module Rack
   module Cargo
     module RequestExecutor
       def self.call(request, state)
-        status, headers, body = state.fetch(:app).call(state.fetch(:request_env))
+        app = state.fetch(:app)
+        request_env = state.fetch(:request_env)
+
+        status, headers, body = app.call(request_env)
         body.close if body.respond_to?(:close)
+
         state[:app_response] = {
             status: status,
             headers: headers,
