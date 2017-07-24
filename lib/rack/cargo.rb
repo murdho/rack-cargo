@@ -29,7 +29,7 @@ module Rack
 
     autoload :BatchProcessor, "rack/cargo/batch_processor"
 
-    autoload :JSONPayloadRequests, "rack/cargo/json_payload_requests"
+    autoload :RequestPayloadJSON, "rack/cargo/request_payload_json"
     autoload :RequestValidator, "rack/cargo/request_validator"
     autoload :ReferenceResolver, "rack/cargo/reference_resolver"
     autoload :RequestEnvBuilder, "rack/cargo/request_env_builder"

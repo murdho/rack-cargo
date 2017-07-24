@@ -37,7 +37,6 @@ class NilClass
   begin
     nil.dup
   rescue TypeError
-
     # +nil+ is not duplicable:
     #
     #   nil.duplicable? # => false
@@ -52,7 +51,6 @@ class FalseClass
   begin
     false.dup
   rescue TypeError
-
     # +false+ is not duplicable:
     #
     #   false.duplicable? # => false
@@ -67,7 +65,6 @@ class TrueClass
   begin
     true.dup
   rescue TypeError
-
     # +true+ is not duplicable:
     #
     #   true.duplicable? # => false
@@ -83,7 +80,6 @@ class Symbol
     :symbol.dup # Ruby 2.4.x.
     "symbol_from_string".to_sym.dup # Some symbols can't `dup` in Ruby 2.4.0.
   rescue TypeError
-
     # Symbols are not duplicable:
     #
     #   :my_symbol.duplicable? # => false
@@ -98,7 +94,6 @@ class Numeric
   begin
     1.dup
   rescue TypeError
-
     # Numbers are not duplicable:
     #
     #  3.duplicable? # => false
@@ -134,7 +129,6 @@ class Complex
   begin
     Complex(1).dup
   rescue TypeError
-
     # Complexes are not duplicable:
     #
     #   Complex(1).duplicable? # => false
@@ -149,7 +143,6 @@ class Rational
   begin
     Rational(1).dup
   rescue TypeError
-
     # Rationals are not duplicable:
     #
     #   Rational(1).duplicable? # => false

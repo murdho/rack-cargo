@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Rack
   module Cargo
     module ReferenceResolver
-      REFERENCING_ENABLED = [REQUEST_PATH, REQUEST_BODY]
+      REFERENCING_ENABLED = [REQUEST_PATH, REQUEST_BODY].freeze
 
       PLACEHOLDER_START = "{{\s*"
       PLACEHOLDER_END = "\s*}}"
@@ -52,7 +54,7 @@ module Rack
         def get_json_element(request, attribute_key)
           element_copy = request.fetch(attribute_key).dup
 
-          if element_copy.kind_of?(String)
+          if element_copy.is_a?(String)
             [element_copy, false]
           else
             [element_copy.to_json, true]

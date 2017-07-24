@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rack/cargo/core_ext/deep_dup"
 
 module Rack

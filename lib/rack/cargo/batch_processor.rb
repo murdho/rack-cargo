@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rack
   module Cargo
     module BatchProcessor
@@ -5,7 +7,7 @@ module Rack
 
       class << self
         def process(app, env)
-          requests = JSONPayloadRequests.from_env(env)
+          requests = RequestPayloadJSON.from_env(env)
 
           if RequestValidator.validate(requests)
             results = process_requests(app, env, requests)
@@ -22,10 +24,10 @@ module Rack
 
           requests.each do |request|
             response = process_request(
-                app,
-                env,
-                request,
-                previous_responses
+              app,
+              env,
+              request,
+              previous_responses
             )
             previous_responses[response.fetch("name")] = response
           end
@@ -35,16 +37,16 @@ module Rack
 
         def process_request(app, env, request, previous_responses)
           initial_state = {
-              app: app,
-              env: env,
-              previous_responses: previous_responses
+            app: app,
+            env: env,
+            previous_responses: previous_responses
           }
 
-          result_state = processors.each_with_object(initial_state) do |processor, state|
-            processor.call(request, state)
+          result = processors.each_with_object(initial_state) do |proc, state|
+            proc.call(request, state)
           end
 
-          result_state[:response]
+          result[:response]
         end
 
         def success(responses)

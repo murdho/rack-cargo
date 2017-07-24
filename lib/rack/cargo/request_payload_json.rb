@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Rack
   module Cargo
-    module JSONPayloadRequests
+    module RequestPayloadJSON
       def self.from_env(env)
         io = env[ENV_INPUT]
         return unless io
