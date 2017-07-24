@@ -1,5 +1,9 @@
 # Rack::Cargo
 
+[![Build Status](https://travis-ci.org/murdho/rack-cargo.svg?branch=master)](https://travis-ci.org/murdho/rack-cargo)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/96d334fdbe7b4bed975c1e344523f926)](https://www.codacy.com/app/murdho/rack-cargo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=murdho/rack-cargo&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/96d334fdbe7b4bed975c1e344523f926)](https://www.codacy.com/app/murdho/rack-cargo?utm_source=github.com&utm_medium=referral&utm_content=murdho/rack-cargo&utm_campaign=Badge_Coverage)
+
 Have you built nice RESTful APIs? I believe you have.
 
 Then you are also familiar with the situation, where API consumer needs to perform multiple actions at once. Maybe in the client application, multiple resources get created on one page. Creating multiple resources means making multiple HTTP requests.
@@ -122,7 +126,7 @@ Example shows both usages with `order.uuid` from the `order` response:
 ```
 
 ### Modifying batch processing pipeline
-
+****
 Batch processing is composed of steps that perform some concrete action on the request and/or state of the processing.
 
 To insert processor in the pipeline, define the processor and inject it to the processors list:
