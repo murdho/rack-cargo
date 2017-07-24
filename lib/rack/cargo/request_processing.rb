@@ -3,21 +3,6 @@
 module Rack
   module Cargo
     module RequestProcessing
-      REQUESTS_KEY = "requests"
-
-      ENV_PATH = "PATH_INFO"
-      ENV_INPUT = "rack.input"
-      ENV_METHOD = "REQUEST_METHOD"
-
-      REQUEST_NAME = "name"
-      REQUEST_PATH = "path"
-      REQUEST_METHOD = "method"
-      REQUEST_BODY = "body"
-
-      PLACEHOLDER_START = "{{\s*"
-      PLACEHOLDER_END = "\s*}}"
-      PLACEHOLDER_PATTERN = /#{PLACEHOLDER_START}(.*?)#{PLACEHOLDER_END}/
-
       def process_batch_request(env)
         json_payload = get_json_payload(env[ENV_INPUT])
         requests = get_requests(json_payload)
@@ -28,6 +13,7 @@ module Rack
             name = request[REQUEST_NAME]
             responses[name] = process_request(request, env, responses)
           end
+          require 'ap'; ap responses
           batch_response(responses.values)
         else
           error_response
@@ -44,10 +30,10 @@ module Rack
       end
 
       def process_request(request, env, responses)
-        replaced_path = perform_replacements(request[REQUEST_PATH], responses)
+        replaced_path = resolve_references(request[REQUEST_PATH], responses)
         request[REQUEST_PATH] = replaced_path
 
-        replaced_body = JSON.parse(perform_replacements(request[REQUEST_BODY].to_json, responses))
+        replaced_body = JSON.parse(resolve_references(request[REQUEST_BODY].to_json, responses))
         request[REQUEST_BODY] = replaced_body
 
         request_env = build_request_env(request, env)
@@ -62,20 +48,8 @@ module Rack
         )
       end
 
-
-      def perform_replacements(unrendered, responses)
-        placeholders = unrendered.scan(PLACEHOLDER_PATTERN).flatten
-        rendered = unrendered.dup
-
-        placeholders.each do |placeholder|
-          value_path = placeholder.split(".").map(&:to_s).insert(1, REQUEST_BODY)
-          value = responses.dig(*value_path)
-          next unless value
-          regexp = [PLACEHOLDER_START, placeholder, PLACEHOLDER_END].join
-          rendered = rendered.gsub(/#{regexp}/, value.to_s)
-        end
-
-        rendered
+      def resolve_references(string, responses)
+        string
       end
 
       def get_json_payload(io)
