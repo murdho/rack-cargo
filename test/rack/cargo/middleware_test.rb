@@ -247,7 +247,7 @@ describe Rack::Cargo::Middleware do
       requests = [
         {
           path: "/",
-          method: {},
+          method: "POST",
           body: {}
         }
       ]
@@ -269,14 +269,17 @@ describe Rack::Cargo::Middleware do
       requests = [
         {
           path: "/",
-          method: {},
+          method: "POST",
           body: {}
         }
       ]
 
       post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
+
       response_json = JSON.parse(last_response.body).first
       response_json.fetch("status").must_equal 504
+      response_json.fetch("headers").must_equal {}
+      response_json.fetch("body").must_equal {}
     end
   end
 end
