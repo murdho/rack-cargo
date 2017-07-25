@@ -12,6 +12,7 @@ module Rack
     ENV_PATH = "PATH_INFO"
     ENV_INPUT = "rack.input"
     ENV_METHOD = "REQUEST_METHOD"
+    ENV_QUERY_STRING = "QUERY_STRING"
 
     REQUEST_NAME = "name"
     REQUEST_PATH = "path"

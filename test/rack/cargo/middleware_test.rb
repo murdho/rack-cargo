@@ -281,6 +281,36 @@ describe Rack::Cargo::Middleware do
       response_json.fetch("headers").must_equal {}
       response_json.fetch("body").must_equal {}
     end
+
+    specify "query string is handled properly" do
+      app_proc = lambda do |env|
+        result = {
+          path: env["PATH_INFO"],
+          query: env["QUERY_STRING"]
+        }.to_json
+
+        [200, {}, [result]]
+      end
+
+      @app = Rack::Builder.new do
+        use Rack::Cargo::Middleware
+        run app_proc
+      end
+
+      requests = [
+        {
+          path: "/search?q=abc",
+          method: "GET",
+          body: {}
+        }
+      ]
+
+      expected_first_response_body = { "path" => "/search", "query" => "q=abc" }
+
+      post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
+      response_json = JSON.parse(last_response.body).first
+      response_json.fetch("body").must_equal expected_first_response_body
+    end
   end
 end
 
