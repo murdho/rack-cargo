@@ -278,8 +278,8 @@ describe Rack::Cargo::Middleware do
 
       response_json = JSON.parse(last_response.body).first
       response_json.fetch("status").must_equal 504
-      response_json.fetch("headers").must_equal {}
-      response_json.fetch("body").must_equal {}
+      response_json.fetch("headers").must_equal Hash.new
+      response_json.fetch("body").must_equal Hash.new
     end
 
     specify "query string is handled properly" do
