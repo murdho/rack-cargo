@@ -255,6 +255,29 @@ describe Rack::Cargo::Middleware do
       post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
       last_response.body.must_include '{"hello":"world"}'
     end
+
+    specify "timeouting long-running single request inside a batch" do
+      Rack::Cargo.configure do |config|
+        config.timeout = 0.0001
+      end
+
+      @app = Rack::Builder.new do
+        use Rack::Cargo::Middleware
+        run ->(env) { sleep(5); [504, {}, ["{}"]] }
+      end
+
+      requests = [
+        {
+          path: "/",
+          method: {},
+          body: {}
+        }
+      ]
+
+      post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
+      response_json = JSON.parse(last_response.body).first
+      response_json.fetch("status").must_equal 504
+    end
   end
 end
 

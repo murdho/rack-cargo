@@ -5,6 +5,7 @@ module Rack
     class Configuration
       attr_accessor :batch_path
       attr_accessor :processors
+      attr_accessor :timeout
 
       def initialize
         self.batch_path = "/batch"
@@ -14,6 +15,7 @@ module Rack
           RequestExecutor,
           ResponseBuilder
         ]
+        self.timeout = 1 # seconds
       end
     end
   end

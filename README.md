@@ -154,6 +154,20 @@ end
 
 Now your processors will be included in the pipeline.
 
+### Individual request timeout
+
+Individual requests in batch will be dropped after execution exceeds configured timeout. Default timeout is 1 second.
+
+Specify timeout for single request in configuration:
+
+```ruby
+Rack::Cargo.configure do |config|
+  config.timeout = 1
+end
+```
+
+Timed out requests' response is with status 504 (Gateway timeout) and with empty headers, body.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

@@ -3,18 +3,33 @@
 module Rack
   module Cargo
     module RequestExecutor
-      def self.call(_request, state)
-        app = state.fetch(:app)
-        request_env = state.fetch(:request_env)
+      class << self
+        def call(_request, state)
+          app = state.fetch(:app)
+          request_env = state.fetch(:request_env)
 
-        status, headers, body = app.call(request_env)
-        body.close if body.respond_to?(:close)
+          status, headers, body = with_timeout(Rack::Cargo.config.timeout) do
+            app.call(request_env)
+          end
 
-        state[:app_response] = {
-          status: status,
-          headers: headers,
-          body: body
-        }
+          body.close if body.respond_to?(:close)
+
+          state[:app_response] = {
+            status: status,
+            headers: headers,
+            body: body
+          }
+        end
+
+        def with_timeout(seconds, &block)
+          Timeout.timeout(seconds, &block)
+        rescue Timeout::Error
+          timeout_response
+        end
+
+        def timeout_response
+          [504, {}, ["{}"]]
+        end
       end
     end
   end
