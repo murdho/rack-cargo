@@ -70,6 +70,7 @@ describe Rack::Cargo::Middleware do
       response = [
         {
           "name" => "second",
+          "path" => "/",
           "status" => 200,
           "headers" => { "Content-Type" => "application/json" },
           "body" => { "message" => "Hello from POST / 17!" }
@@ -100,12 +101,14 @@ describe Rack::Cargo::Middleware do
       response = [
         {
           "name" => "first",
+          "path" => "/rocket",
           "status" => 200,
           "headers" => { "Content-Type" => "application/json" },
           "body" => { "message" => "Hello from PATCH /rocket 16!" }
         },
         {
           "name" => "second",
+          "path" => "/moon",
           "status" => 200,
           "headers" => { "Content-Type" => "application/json" },
           "body" => { "message" => "Hello from PATCH /moon 16!" }
@@ -190,6 +193,7 @@ describe Rack::Cargo::Middleware do
       response = [
         {
           "name" => "order",
+          "path" => "/orders",
           "status" => 201,
           "headers" => {},
           "body" => {
@@ -199,6 +203,7 @@ describe Rack::Cargo::Middleware do
         },
         {
           "name" => "order_item",
+          "path" => "/orders/bf52fdb5-d1c3-4c66-ba7d-bdf4cd83f265/items",
           "status" => 201,
           "headers" => {},
           "body" => {
@@ -208,6 +213,7 @@ describe Rack::Cargo::Middleware do
         },
         {
           "name" => "payment",
+          "path" => "/payments",
           "status" => 201,
           "headers" => {},
           "body" => {
@@ -230,6 +236,24 @@ describe Rack::Cargo::Middleware do
 
     specify "detecting batch path" do
       subject.batch_request?(batch_path).must_equal true
+    end
+
+    specify "batch response handles different response objects according to Rack spec" do
+      @app = Rack::Builder.new do
+        use Rack::Cargo::Middleware
+        run ->(env) { [200, {}, Rack::Response.new(['{"hello":"world"}'])] }
+      end
+
+      requests = [
+        {
+          path: "/",
+          method: {},
+          body: {}
+        }
+      ]
+
+      post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
+      last_response.body.must_include '{"hello":"world"}'
     end
   end
 end

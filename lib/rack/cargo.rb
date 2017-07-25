@@ -19,6 +19,7 @@ module Rack
     REQUEST_BODY = "body"
 
     RESPONSE_NAME = "name"
+    RESPONSE_PATH = "path"
     RESPONSE_STATUS = "status"
     RESPONSE_HEADERS = "headers"
     RESPONSE_BODY = "body"
