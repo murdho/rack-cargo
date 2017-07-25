@@ -40,7 +40,8 @@ Initialize the middleware:
 
 ```ruby
 Rack::Cargo.configure do |config|
-    config.batch_path = '/batch'
+  config.batch_path = '/batch'
+  config.timeout = 1
 end
 ```
 
