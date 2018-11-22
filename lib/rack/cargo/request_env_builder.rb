@@ -26,6 +26,7 @@ module Rack
         # otherwise returns empty string.
         def io_input_from_request_body(request_body)
           return "" if request_body.nil?
+
           request_body.to_json
         end
       end
