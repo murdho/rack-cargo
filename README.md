@@ -34,7 +34,7 @@ Or install it yourself as:
 
 ## Usage
 
-Regarding individual requests, `rack-cargo` tries to follow the [Rack SPEC](https://www.rubydoc.info/github/rack/rack/file/SPEC). If you find any mismatches, feel free to open an issue or pull request.
+Regarding individual requests, `rack-cargo` tries to follow the [Rack SPEC](https://www.rubydoc.info/github/rack/rack/file/SPEC). If you find any mismatches, feel free to open an issue or a pull request.
 
 ### Configuration
 
@@ -171,13 +171,13 @@ end
 
 Timed out requests' response is with status 504 (Gateway timeout) and with empty headers, body.
 
-### `nil` body in individual request
+### `nil` body in an individual request
 
 In case an individual requests' body is `nil`, it will be sent downstream as `""` (empty `String`).
 
-### Empty body (No Content) in individual response
+### No body in an individual response
 
-In case an individual request receives response without a body (as empty `String`), it will be sent upstream as `nil`.
+In case an individual request receives a response without a body (as empty `String`), it will be sent upstream as `nil`.
 
 ## Development
 
