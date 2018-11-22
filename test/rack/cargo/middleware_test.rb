@@ -52,7 +52,7 @@ describe Rack::Cargo::Middleware do
         }
       ]
 
-      create_batch_request(requests)
+      make_batch_request(requests)
       last_response.status.must_equal 422
     end
 
@@ -77,7 +77,7 @@ describe Rack::Cargo::Middleware do
         }
       ]
 
-      create_batch_request(requests)
+      make_batch_request(requests)
       last_response.content_type.must_equal "application/json"
       last_response.body.must_equal responses.to_json
     end
@@ -116,7 +116,59 @@ describe Rack::Cargo::Middleware do
         }
       ]
 
-      create_batch_request(requests)
+      make_batch_request(requests)
+      last_response.body.must_equal responses.to_json
+    end
+
+
+    specify "handling individual empty request body" do
+      requests = [
+        {
+          name: "find_the_sunshine",
+          path: "/sunshine",
+          method: "GET",
+          body: nil,
+        }
+      ]
+
+      responses = [
+        {
+          name: "find_the_sunshine",
+          path: "/sunshine",
+          status: 200,
+          headers: { "Content-Type" => "application/json" },
+          body: { message: "Hello from GET /sunshine 0!" }
+        }
+      ]
+
+      make_batch_request(requests)
+      last_response.body.must_equal responses.to_json
+    end
+
+
+    specify "handling individual empty response body" do
+      @app = fake_app(FakeEmptyResponseApp)
+
+      requests = [
+        {
+          name: "candy",
+          path: "/candies/5w33t5un5h1n3",
+          method: "DELETE",
+          body: {},
+        }
+      ]
+
+      responses = [
+        {
+          name: "candy",
+          path: "/candies/5w33t5un5h1n3",
+          status: 204,
+          headers: { "X-Why" => "Not" },
+          body: nil
+        }
+      ]
+
+      make_batch_request(requests)
       last_response.body.must_equal responses.to_json
     end
 
@@ -188,7 +240,7 @@ describe Rack::Cargo::Middleware do
         }
       ]
 
-      create_batch_request(requests)
+      make_batch_request(requests)
       last_response.body.must_equal responses.to_json
     end
 
@@ -215,7 +267,7 @@ describe Rack::Cargo::Middleware do
         }
       ]
 
-      create_batch_request(requests)
+      make_batch_request(requests)
       last_response.body.must_include '{"hello":"world"}'
     end
 
@@ -234,7 +286,7 @@ describe Rack::Cargo::Middleware do
         }
       ]
 
-      create_batch_request(requests)
+      make_batch_request(requests)
 
       response_json = JSON.parse(last_response.body).first
       response_json.fetch("status").must_equal 504
@@ -256,7 +308,7 @@ describe Rack::Cargo::Middleware do
 
       expected_first_response_body = { "path" => "/search", "query" => "q=abc" }
 
-      create_batch_request(requests)
+      make_batch_request(requests)
       response_json = JSON.parse(last_response.body).first
       response_json.fetch("body").must_equal expected_first_response_body
     end
@@ -265,7 +317,7 @@ describe Rack::Cargo::Middleware do
 
   # Helpers
 
-  def create_batch_request(requests)
+  def make_batch_request(requests)
     post batch_path, { requests: requests }.to_json, "CONTENT_TYPE" => "application/json"
   end
 
@@ -371,5 +423,11 @@ class FakeQueryStringApp < FakeBaseApp
     }
 
     super
+  end
+end
+
+class FakeEmptyResponseApp < FakeBaseApp
+  def call(env)
+    [204, {"X-Why" => "Not"}, []]
   end
 end
