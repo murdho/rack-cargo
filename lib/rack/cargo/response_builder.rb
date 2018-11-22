@@ -29,6 +29,7 @@ module Rack
         def response_body(app_response_body)
           response_string = ""
           app_response_body.each { |piece| response_string += piece }
+          return if response_string.empty?
 
           JSON.parse(response_string)
         end

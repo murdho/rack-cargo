@@ -12,6 +12,8 @@ module Rack
       class << self
         def call(request, state)
           REFERENCING_ENABLED.each do |attribute_key|
+            next if request.fetch(attribute_key).nil?
+
             element, converted_to_json = get_json_element(request, attribute_key)
             placeholders = find_placeholders(element)
 
